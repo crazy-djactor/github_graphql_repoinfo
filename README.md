@@ -9,7 +9,7 @@ Create .env file and set environment variables as following
 * OWNER=github user (For my case, it is crazy-djactor)
 
 *****
-In constAPI there are some constants for running script. 
+In constAPI.py there are some constants for running script. 
 
 * sample_repo = "amazon_for_test" 
 * sample_search_string = "DJANGO_SETTINGS_MODULE"
