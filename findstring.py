@@ -1,6 +1,53 @@
+import json
 import re
 from constAPI import *
+import base64
 
+class FindStringV3:
+    def __init__(self, owner, repo, entries):
+        self.owner = owner
+        self.repo = repo
+        self.entries = entries
+        pass
+
+    def find_string_filename(self, regex):
+        search_result = []
+        for str_ in self.entries['tree']:
+            file_name = str_["path"].split('/')[-1]
+            z = re.match(regex, file_name)
+            if z:
+                search_result.append(str_)
+        return search_result
+
+    def search_string_in_file(self, file_, string_to_search):
+        sha = file_["sha"]
+        query = "repos/%s/%s/git/blobs/%s" % (self.owner, self.repo, sha)
+        response = run_query_v3(query)
+        try:
+            list_of_results = []
+            text_content = base64.b64decode(response["content"]).decode()
+            read_obj = text_content.split('\n')
+            # Read all lines in the file one by one
+            line_number = 0
+            for line in read_obj:
+                # For each line, check if line contains the string
+                line_number += 1
+                if string_to_search in line:
+                    # If yes, then add the line number & line as a tuple in the list
+                    list_of_results.append((file_["path"], line_number, line.rstrip()))
+            return list_of_results
+        except:
+            return []
+
+    def search_string_content(self, string_to_search):
+        """Search for the given string in file and return lines containing that string,
+        along with line numbers"""
+        list_of_results = []
+        for file_ in self.entries['tree']:
+            if file_["type"] == 'blob':
+                list_of_results = list_of_results + self.search_string_in_file(file_, string_to_search)
+        # Return list of tuples containing line numbers and lines where string is found
+        return list_of_results
 
 class FindString:
     def __init__(self, owner, repo, entries, path):
@@ -99,3 +146,4 @@ class FindString:
         except:
             print("search string err")
             return []
+

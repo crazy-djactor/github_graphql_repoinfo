@@ -15,6 +15,7 @@ sample_repo = "amazon_for_test"
 sample_search_string = "DJANGO_SETTINGS_MODULE"
 sample_regex = "^s"
 
+
 # A simple function to use requests.post to make the API call. Note the json= section.
 def run_query(query):
     request = requests.post('https://api.github.com/graphql', json={'query': query}, headers=headers)
@@ -26,3 +27,16 @@ def run_query(query):
         return "Err"
     else:
         raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
+
+
+def run_query_v3(query):
+    request_str = 'https://api.github.com/%s' % query
+    request = requests.get(request_str, headers=headers)
+
+    if request.status_code == 200:
+        result = request.json()
+        # print(result)
+        return result
+    else:
+        raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
+

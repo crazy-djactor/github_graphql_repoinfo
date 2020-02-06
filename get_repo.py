@@ -1,10 +1,7 @@
-import requests
 from constAPI import *
-from recursive_tree import *
-from findstring import *
 
+# The GraphQL query (with a few additional bits included) itself defined as a multi-line string.
 
-# The GraphQL query (with a few aditional bits included) itself defined as a multi-line string.
 def get_all_respositories(user_name):
     query_format = """
     { 
@@ -87,28 +84,8 @@ if __name__ == '__main__':
 
     #Get all repositories of owner
     repositories = get_all_respositories(owner)
-
     # Get last commit for master branch
     print("*****ALL REPOSITORIES AND LAST COMMIT*****\n")
     for repository in repositories:
         print("{}---{}".format(repository["name"], get_last_commit(owner, repository["name"])))
 
-    # Get recursive tree of repository as jason
-
-    tree = RecursiveTree(owner, sample_repo)
-    tree_entries = tree.get_tree()
-
-    print("\n\n*****RECURSIVE TREE ENTRIES*****\n")
-    for str_ in tree_entries:
-        print(str_)
-
-    print("\n\n*****SEARCH FILES BY REGULAR EXPRESSION*****(Sample expresion is {})\n".format(sample_regex))
-    findString = FindString(owner, sample_repo, tree_entries, "repository:")
-    search_regx = findString.search_byRegX(regX="^s")
-    for str_ in search_regx:
-        print(str_)
-
-    print("\n\n*****SEARCH STRING IN FILES*****(Sample string is {})\n".format(sample_search_string))
-    search_str = findString.search_string_in_file(sample_search_string)
-    for str_ in search_str:
-        print(str_)
