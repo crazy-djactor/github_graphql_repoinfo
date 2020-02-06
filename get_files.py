@@ -4,12 +4,12 @@ import json
 
 if __name__ == '__main__':
     # Get recursive tree of repository as jason
-    # tree = RecursiveTreeV3(owner, sample_repo)
-    # tree_entries = tree.get_recursive_tree()
-    #
-    # print("\n\n*****RECURSIVE TREE ENTRIES*****\n")
-    # for str_ in tree_entries['tree']:
-    #     print(str_)
+    tree = RecursiveTreeV3(owner, sample_repo)
+    tree_entries = tree.get_recursive_tree()
+
+    print("\n\n*****RECURSIVE TREE ENTRIES*****\n")
+    for str_ in tree_entries['tree']:
+        print(str_)
 
     file_name = sample_repo + '.json'
     with open(file_name, 'w') as outfile:
