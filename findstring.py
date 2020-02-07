@@ -39,13 +39,18 @@ class FindStringV3:
         except:
             return []
 
-    def search_string_content(self, string_to_search):
+    def search_string_content(self, entries=None, string_to_search=""):
         """Search for the given string in file and return lines containing that string,
         along with line numbers"""
         list_of_results = []
-        for file_ in self.entries['tree']:
-            if file_["type"] == 'blob':
-                list_of_results = list_of_results + self.search_string_in_file(file_, string_to_search)
+        if entries is None:
+            for file_ in self.entries['tree']:
+                if file_["type"] == 'blob':
+                    list_of_results = list_of_results + self.search_string_in_file(file_, string_to_search)
+        else:
+            for file_ in entries:
+                if file_["type"] == 'blob':
+                    list_of_results = list_of_results + self.search_string_in_file(file_, string_to_search)
         # Return list of tuples containing line numbers and lines where string is found
         return list_of_results
 

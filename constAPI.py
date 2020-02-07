@@ -26,7 +26,8 @@ def run_query(query):
             return result["data"]
         return "Err"
     else:
-        raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
+        return "Err"
+        # raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
 
 
 def run_query_v3(query):
@@ -38,5 +39,6 @@ def run_query_v3(query):
         # print(result)
         return result
     else:
-        raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
+        return ""
+        # raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
 

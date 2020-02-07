@@ -1,4 +1,8 @@
+import errno
+
 from constAPI import *
+from recursive_tree import *
+import json
 
 # The GraphQL query (with a few additional bits included) itself defined as a multi-line string.
 
@@ -81,11 +85,40 @@ def get_last_commit(owner, branch):
 
 
 if __name__ == '__main__':
-
-    #Get all repositories of owner
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    owner_respo_dir = os.path.join(base_path, owner)
+    try:
+        os.makedirs(owner_respo_dir)
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
+    # Get all repositories of owner
     repositories = get_all_respositories(owner)
     # Get last commit for master branch
     print("*****ALL REPOSITORIES AND LAST COMMIT*****\n")
+    commit_file_path = os.path.join(owner_respo_dir, "repo_commit.txt")
+    commit_file = open(commit_file_path, "a")
+    content = ""
     for repository in repositories:
-        print("{}---{}".format(repository["name"], get_last_commit(owner, repository["name"])))
+        content_ = "{}---{}".format(repository["name"], get_last_commit(owner, repository["name"]))
+        print(content_)
+        content = content + '\n' + content_
+    commit_file.write(content)
+    commit_file.close()
 
+    # Get recursive tree of repository as jason
+    for repository in repositories:
+        tree = RecursiveTreeV3(owner, repository["name"])
+        tree_entries = tree.get_recursive_tree()
+
+        try:
+            for str_ in tree_entries['tree']:
+                print(str_)
+            print("\n\n*****RECURSIVE TREE ENTRIES*****\n")
+
+            file_name = repository["name"] + '.json'
+            file_path = os.path.join(owner_respo_dir, file_name)
+            with open(file_path, 'w') as outfile:
+                json.dump(tree_entries, outfile)
+        except:
+            continue

@@ -81,8 +81,11 @@ class RecursiveTreeV3:
     def get_recursive_tree(self):
         query = "repos/%s/%s/branches/master" % (self.owner, self.repo)
         result = run_query_v3(query)
-        self.root_sha = result["commit"]["sha"]
-        return self.get_recursive()
+        try:
+            self.root_sha = result["commit"]["sha"]
+            return self.get_recursive()
+        except:
+            return []
 
     def get_recursive(self):
         query = "repos/%s/%s/git/trees/%s?recursive=1" % (self.owner, self.repo, self.root_sha)
