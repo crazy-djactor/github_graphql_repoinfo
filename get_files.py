@@ -83,16 +83,16 @@ if __name__ == '__main__':
 
         string_cap = "\n   SEARCH FILES BY REGULAR EXPRESSION IN REPO '{}'   (Sample expresion is {})\n".format(
             repository["name"], sample_regex)
-        print("\n   SEARCH FILES BY REGULAR EXPRESSION IN REPO '{}'   (Sample expresion is {})\n".format(
-            repository["name"], sample_regex))
+        print(string_cap)
         find = FindStringV3(entries=tree_entries, owner=owner, repo=repository["name"])
         search_result = find.find_string_filename(sample_regex)
-        for str_ in search_result:
-            print(str_)
+
         file_path = os.path.join(repo_ex_dir, 'regx_file_list.log')
         with open(file_path, 'w') as outfile:
             outfile.write(string_cap)
-            json.dump(search_result, outfile)
+            for str_ in search_result:
+                print(str_)
+                outfile.write("{}\n".format(str_))
 
         print("\n   SEARCH STRING IN FILTERED FILES IN REPO '{}'   (Sample string is {})\n".format(repository["name"],
                                                                                                    sample_search_string))
@@ -101,4 +101,5 @@ if __name__ == '__main__':
         thread_count = save_search_in_Entries(entries=search_result, search_string=sample_search_string, findv4=find_v4,
                                               que_=que_result, root_path=repo_ex_dir)
         file_path = os.path.join(repo_ex_dir, 'search_string_info.log')
+
         printLog(thread_count_=thread_count, que_search_result=que_result, file_path=file_path)
