@@ -13,6 +13,8 @@ class FindStringV3:
     def find_string_filename(self, regex):
         search_result = []
         for str_ in self.entries['tree']:
+            if str_["type"] != "blob":
+                continue
             file_name = str_["path"].split('/')[-1]
             z = re.match(regex, file_name)
             if z:
@@ -101,7 +103,8 @@ class FindString:
     def search_string_entries(self, entries, string_to_search, parent_path):
         for entry in entries:
             if entry["type"] == 'blob':
-                search_s = self.search_string_in_fileod(fileoid=entry['oid'], string_to_search=string_to_search)
+                file_name_save = entry["path"].replace('/', '_')
+                search_s = self.save_search_string_in_fileod(fileoid=entry['oid'], string_to_search=string_to_search, file_name=file_name_save)
                 if len(search_s):
                     new_path = "%s\%s" % (parent_path,entry["name"])
                     self.search_result.append((new_path, search_s))
@@ -110,7 +113,7 @@ class FindString:
                 self.search_string_entries(entries=entry["child"], string_to_search=string_to_search,
                                            parent_path=new_path)
 
-    def search_string_in_fileod(self, fileoid, string_to_search):
+    def save_search_string_in_fileod(self, fileoid, string_to_search, file_name):
         """
         Search string_to_search in given file_name
         :param fileoid: file object id in Git Object which is used for search
@@ -136,6 +139,9 @@ class FindString:
             result = run_query(query)
             if result["repository"]["object"]["text"] is None:
                 return []
+            with open(file_name, 'w') as outfile:
+                outfile.write(result["repository"]["object"]["text"])
+
             read_obj = result["repository"]["object"]["text"].split('\n')
             list_of_results.clear()
             # Read all lines in the file one by one
@@ -149,6 +155,5 @@ class FindString:
             # Return list of tuples containing line numbers and lines where string is found
             return list_of_results
         except:
-            print("search string err")
             return []
 

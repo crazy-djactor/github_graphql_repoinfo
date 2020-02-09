@@ -12,7 +12,7 @@ headers = {"Authorization": "Bearer {}".format(API_KEY)}
 owner = os.getenv("OWNER")
 
 sample_repo = "amazon_for_test"
-sample_search_string = "DJANGO_SETTINGS_MODULE"
+sample_search_string = "django.contrib."
 sample_regex = "^s"
 
 
