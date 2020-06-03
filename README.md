@@ -1,4 +1,4 @@
-<h1> This is a sample project for using github graphql</h1>
+<h1> This is a project for using github graphql</h1>
 
 Getting all repositories for given user and on specific repository search files by regular expression.
 And also search string in files included in that repository
